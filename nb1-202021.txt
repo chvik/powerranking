@@ -1,0 +1,36 @@
+Budafok - Kisvárda 2-1
+Diósgyőr - Mezőkövesd 2-1
+ZTE -  Fehérvár 3-3
+Paks -  Újpest 1-2
+MTK - FTC  1-1
+Újpest - Budafok 1-1
+Fehérvár - Paks 1-1
+MTK - Honvéd 3-1
+Mezőkövesd - ZTE  1-1
+Honvéd - Kisvárda 1-2
+Puskás Akadémia - Újpest 3-2
+Budafok - Fehérvár 1-4
+ZTE - FTC  1-2
+Paks - Mezőkövesd 1-2
+Diósgyőr - MTK 1-1
+Kisvárda - Puskás Akadémia 0-3
+MTK  - ZTE 0-3
+Újpest - Kisvárda 2-4
+Fehérvár  - Puskás Akadémia 3-1
+Diósgyőr - Honvéd 2-4
+Mezőkövesd  - Budafok 1-0
+FTC - Paks 5-0
+Honvéd - Újpest 1-2
+ZTE - Diósgyőr 3-1
+Paks - MTK 4-0
+Puskás Akadémia - Mezőkövesd 1-0
+Fehérvár - Újpest 5-1
+FTC - Puskás Akadémia 2-1
+ZTE - Honvéd 2-4
+Diósgyőr  - Paks 1-2
+Mezőkövesd - Kisvárda 1-2
+MTK - Budafok 1-2
+Puskás Akadémia - MTK 0-3
+Újpest - Mezőkövesd 1-0
+Budafok - Diósgyőr 2-1
+Kisvárda - FTC 0-2
