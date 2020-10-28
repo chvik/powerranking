@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import re
 import sys
 from collections import defaultdict
@@ -24,24 +26,30 @@ def read_data(file_name):
         "by_opponents": by_opponents
     }
 
-def calculate_normalized_scores(league):
-    base_scores = defaultdict(int)
+
+def calculate_absolute_scores(league):
+    absolute_scores = defaultdict(int)
     n_games = defaultdict(int)
     for match in league["matches"]:
         home_team, away_team, home_goals, away_goals = match
         n_games[home_team] += 1
         n_games[away_team] += 1
         if home_goals > away_goals:
-            base_scores[home_team] += 3
+            absolute_scores[home_team] += 3
         elif away_goals > home_goals:
-            base_scores[away_team] += 3
+            absolute_scores[away_team] += 3
         else:
-            base_scores[home_team] += 1
-            base_scores[away_team] += 1
+            absolute_scores[home_team] += 1
+            absolute_scores[away_team] += 1
+    return (absolute_scores, n_games)
+
+
+def calculate_normalized_scores(league):
+    absolute_scores, n_games = calculate_absolute_scores(league)
     
     team_quotients = {}
     for team in league["teams"]:
-        team_quotients[team] = base_scores[team] / n_games[team]
+        team_quotients[team] = absolute_scores[team] / n_games[team]
     avg_quotient = sum(team_quotients.values()) / len(team_quotients)
 
     normalized_scores = []
@@ -71,3 +79,54 @@ def least_square(laplacian, scores, r, i):
     elif i > 0:
         q_prev = least_square(laplacian, scores, r, i-1)
         return q_prev + 1/r * (1/r * (r * np.identity(laplacian.shape[0]) - laplacian))**i @ scores
+
+
+def powerranking_report(args):
+    if len(args) == 0:
+        print("Missing argument: results file name", file=sys.stderr)
+        exit(1)
+
+    league = read_data(args[0])
+    absolute_scores, n_games = calculate_absolute_scores(league)
+    normalized_scores = calculate_normalized_scores(league)
+    laplacian = get_laplacian_matrix(league)
+    r = np.amax(np.diagonal(laplacian))
+    
+    print("Standing by absolute score (no tiebreaker)")
+    print_formatted_absolute_scores(league["teams"], absolute_scores, n_games)
+    print()
+
+    print("Standing by normalized scores")
+    print_formatted_result(league["teams"], normalized_scores)
+    print()
+
+    iteration = 10
+    print(f"Standing by least square algorithm (after {iteration} iterations)")
+    print_formatted_result(league["teams"], least_square(laplacian, normalized_scores, r, iteration))
+    print()
+
+
+def print_formatted_absolute_scores(teams, absolute_score, n_games):
+    team_score_n_games = zip(teams, [absolute_score[team] for team in teams], [n_games[team] for team in teams])
+    sorted_triplets = sorted(team_score_n_games, key=lambda triplet: triplet[1], reverse=True)
+    for i, (team, score, n) in enumerate(sorted_triplets):
+        if i > 0 and score == sorted_triplets[i-1][1]:
+            # tie
+            print(f"  {team} {score} {n}")
+        else:
+            print(f"{i+1} {team} {score} {n}")
+
+
+def print_formatted_result(teams, ratings):
+    team_rating_pairs = zip(teams, ratings)
+    sorted_pairs = sorted(team_rating_pairs, key=lambda pair: pair[1], reverse=True)
+    for i, (team, score) in enumerate(sorted_pairs):
+        if i > 0 and score == sorted_pairs[i-1][1]:
+            # tie
+            print(f"  {team} {score}")
+        else:
+            print(f"{i+1} {team} {score}") 
+
+
+if __name__ == "__main__":
+    powerranking_report(sys.argv[1:])
